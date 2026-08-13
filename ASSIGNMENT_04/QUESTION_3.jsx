@@ -1,0 +1,71 @@
+import {
+  BrowserRouter,
+  Routes,
+  Route,
+  useNavigate,
+  useParams,
+} from "react-router-dom";
+
+const products = [
+  { id: 1, name: "Laptop", price: 50000 },
+  { id: 2, name: "Mobile", price: 25000 },
+  { id: 3, name: "Headphones", price: 3000 },
+];
+
+function ProductList() {
+  const navigate = useNavigate();
+
+  return (
+    <div>
+      <h1>Product List</h1>
+
+      {products.map((product) => (
+        <div key={product.id}>
+          <button onClick={() => navigate(`/p/${product.id}`)}>
+            {product.name}
+          </button>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function ProductDetails() {
+  const { id } = useParams();
+  const navigate = useNavigate();
+
+  const product = products.find(
+    (product) => product.id === Number(id)
+  );
+
+  if (!product) {
+    return <h1>Product not found</h1>;
+  }
+
+  return (
+    <div>
+      <h1>Product Details</h1>
+
+      <p>Name: {product.name}</p>
+      <p>Price: ₹{product.price}</p>
+
+      <button onClick={() => navigate("/list")}>
+        Back to List
+      </button>
+    </div>
+  );
+}
+
+function App() {
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route path="/list" element={<ProductList />} />
+        <Route path="/p/:id" element={<ProductDetails />} />
+        <Route path="/" element={<ProductList />} />
+      </Routes>
+    </BrowserRouter>
+  );
+}
+
+export default App;
